@@ -61,25 +61,26 @@
 
 			$('#context').children("p").click(function() {
 				var str = $(this).attr("class");
+
 				if (str.slice(-1) == "c") {
-					columns = str.slice(0,1);
-					return true;
+					columns = Number(str.slice(0,1));
 				} else if (str.slice(-1) == "r") {
-					rows = str.slice(0,1);
-					return true;
+					rows = Number(str.slice(0,1));
 				} else if (str.slice(-1) == "m") {
 					if (str.slice(0,1) == "l") {
-						leftMargin = prompt("define left margin");
+						leftMargin = Number(prompt("define left margin \ncurrently it is "+ leftMargin));
 					} else if (str.slice(0,1) == "r") {
-						rightMargin = prompt("define right margin");
+						rightMargin = Number(prompt("define right margin \ncurrently it is "+ rightMargin));
 					} else if (str.slice(0,1) == "t") {
-						topMargin = prompt("define top margin");
+						topMargin = Number(prompt("define top margin \ncurrently it is "+ topMargin));
 					} else if (str.slice(0,1) == "b") {
-						bottomMargin = prompt("define bottom margin");
+						bottomMargin = Number(prompt("define bottom margin \ncurrently it is "+ bottomMargin));
 					}
 				} else {
 					return false;
 				}
+				$('#context').css("display", "none")
+				return true;
 			})
 
 			function showCustomMenu() {
@@ -106,14 +107,125 @@
 				rightMargin		= 0,
 				bottomMargin	= 0,
 				topMargin		= 0;
-			function draw() {
 
+			function draw() {
 				if (ctx == null) {
 					// Define canvas and context
 					ctx	= canvas.getContext("2d");
 				}
+
 				// Clear Each Frame
 				ctx.clearRect(10,10,605,855);
+
+				// make rightMargin
+				if (rightMargin != 0) {
+					if (topMargin == 0 && bottomMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(w - rightMargin, 10)
+						ctx.lineTo(w - rightMargin, h);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (bottomMargin != 0 && topMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(w - rightMargin, 10)
+						ctx.lineTo(w - rightMargin, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (topMargin != 0 && bottomMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(w - rightMargin, topMargin + 10)
+						ctx.lineTo(w - rightMargin, h);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else {
+						ctx.beginPath();
+						ctx.moveTo(w - rightMargin, topMargin + 10)
+						ctx.lineTo(w - rightMargin, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					}
+				}
+				if (topMargin != 0) {
+					if (rightMargin == 0 && leftMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(10, topMargin + 10)
+						ctx.lineTo(w, topMargin + 10);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (rightMargin != 0 && leftMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(10, topMargin + 10)
+						ctx.lineTo(w - rightMargin, topMargin + 10);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (leftMargin != 0 && rightMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, topMargin + 10)
+						ctx.lineTo(w, topMargin + 10);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, topMargin + 10)
+						ctx.lineTo(w - rightMargin, topMargin + 10);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					}
+				}
+				if (bottomMargin != 0) {
+					if (rightMargin == 0 && leftMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(10, h - bottomMargin)
+						ctx.lineTo(w, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (rightMargin != 0 && leftMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(10, h - bottomMargin)
+						ctx.lineTo(w - rightMargin, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (leftMargin != 0 && rightMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, h - bottomMargin)
+						ctx.lineTo(w, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, h - bottomMargin)
+						ctx.lineTo(w - rightMargin, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					}
+				}
+				if (leftMargin != 0) {
+					if (topMargin == 0 && bottomMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, 10)
+						ctx.lineTo(leftMargin + 10, h);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (bottomMargin != 0 && topMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, 10)
+						ctx.lineTo(leftMargin + 10, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else if (topMargin != 0 && bottomMargin == 0) {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, topMargin + 10)
+						ctx.lineTo(leftMargin + 10, h);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					} else {
+						ctx.beginPath();
+						ctx.moveTo(leftMargin + 10, topMargin + 10)
+						ctx.lineTo(leftMargin + 10, h - bottomMargin);
+						ctx.strokeStyle = "black"
+						ctx.stroke();
+					}
+				}
 
 				// Show Pointer
 				ctx.beginPath();
@@ -146,27 +258,8 @@
 				}
 				ctx.lineWidth = 0.5;
 				ctx.stroke();
-				// Call the column painter
-				ctx.beginPath();
-				drawColumns();
-
-
-				// Call the margin painter
-				ctx.beginPath();
-				drawMargins();
-
 
 				window.requestAnimationFrame(draw);
-			}
-
-			function drawColumns() {
-				if (columns == 1) {
-					ctx.moveTo
-				}
-			}
-
-			function drawMargins() {
-
 			}
 
 			window.requestAnimationFrame(draw);
