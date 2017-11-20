@@ -254,9 +254,15 @@
 				//       Drawing rows       //
 				//                          //
 				//////////////////////////////
-
 				if (rows != 0) {
-
+					for (var i = 1; i < rows + 1; i++) {
+						ctx.strokeRect(
+							(leftMargin + 10) + interlabelMargin,
+							(topMargin + 10) + interlabelMargin,
+							(w - 10) - (rightMargin + interlabelMargin) - interlabelMargin,
+							(h - 10) - (bottomMargin + interlabelMargin) - interlabelMargin
+						)
+					}
 				}
 
 				// Show Pointer
