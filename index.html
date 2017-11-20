@@ -18,18 +18,27 @@
 				position: absolute;
 				z-index: 100000;
 				border: 0.5px solid grey;
-				width: 100px;
+				width: 150px;
+				background-color: lightgrey;
+				-webkit-box-shadow: 2px 3px 8px 0px grey;
 			}
 			#context > p {
-				margin-left: 15px;
-				cursor: pointer
+				margin: 0;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				padding-left: 15px;
+				cursor: pointer;
+				-webkit-transition: all .2s;
+			}
+			#context > p:hover {
+				background-color: grey;
 			}
 		</style>
 
 		<nav id="context">
-			<p class="1 c">1 column</p>
-			<p class="2 c">2 columns</p>
-			<p class="3 c">3 columns</p>
+			<p class="c">column</p>
+			<p class="r">rows</p>
+			<p class="i m">interlabel margin</p>
 			<p class="l m">left margin</p>
 			<p class="r m">right margin</p>
 			<p class="t m">top margin</p>
@@ -61,11 +70,10 @@
 
 			$('#context').children("p").click(function() {
 				var str = $(this).attr("class");
-
 				if (str.slice(-1) == "c") {
-					columns = Number(str.slice(0,1));
+					columns = Number(prompt("define number of columns \ncurrently it is " + columns));
 				} else if (str.slice(-1) == "r") {
-					rows = Number(str.slice(0,1));
+					rows = Number(prompt("define number of rows \ncurrently it is " + rows));
 				} else if (str.slice(-1) == "m") {
 					if (str.slice(0,1) == "l") {
 						leftMargin = Number(prompt("define left margin \ncurrently it is "+ leftMargin));
@@ -75,6 +83,8 @@
 						topMargin = Number(prompt("define top margin \ncurrently it is "+ topMargin));
 					} else if (str.slice(0,1) == "b") {
 						bottomMargin = Number(prompt("define bottom margin \ncurrently it is "+ bottomMargin));
+					} else if (str.slice(0,1) == "i") {
+						interlabelMargin = Number(prompt("define margin between labels \ncurrently it is "+ interlabelMargin));
 					}
 				} else {
 					return false;
@@ -85,11 +95,12 @@
 
 			function showCustomMenu() {
 				$('#context').css({
-					"top"		: mousePos.y > 755 ? mousePos.y - 100 : mousePos.y,
-					"left"		: mousePos.x > 505 ? mousePos.x - 100 : mousePos.x,
+					"top"		: mousePos.y > 755 ? mousePos.y - $('#context').height() : mousePos.y,
+					"left"		: mousePos.x > 505 ? mousePos.x - $('#context').width() : mousePos.x,
 					"display"	: "block"
 				});
 			}
+
 
 			//////////////////////////////
 			//                          //
@@ -97,16 +108,18 @@
 			//                          //
 			//////////////////////////////
 
+
 			var canvas = document.getElementById("canvas");
 			var ctx;
 			var h = document.getElementById("canvas").height,
 				w = document.getElementById("canvas").width;
-			var columns			= 0,
-				rows			= 0,
-				leftMargin 		= 0,
-				rightMargin		= 0,
-				bottomMargin	= 0,
-				topMargin		= 0;
+			var columns				= 0,
+				rows				= 0,
+				leftMargin 			= 0,
+				rightMargin			= 0,
+				bottomMargin		= 0,
+				topMargin			= 0,
+				interlabelMargin	= 0;
 
 			function draw() {
 				if (ctx == null) {
@@ -116,6 +129,14 @@
 
 				// Clear Each Frame
 				ctx.clearRect(10,10,605,855);
+
+
+				//////////////////////////////
+				//                          //
+				//     Drawing margins      //
+				//                          //
+				//////////////////////////////
+
 
 				// make rightMargin
 				if (rightMargin != 0) {
@@ -225,6 +246,17 @@
 						ctx.strokeStyle = "black"
 						ctx.stroke();
 					}
+				}
+
+
+				//////////////////////////////
+				//                          //
+				//       Drawing rows       //
+				//                          //
+				//////////////////////////////
+
+				if (rows != 0) {
+
 				}
 
 				// Show Pointer
