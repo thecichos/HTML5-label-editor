@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	<title>html5 label editor</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<canvas id="canvas" width="605" height="855"></canvas>
+
+		<style media="screen">
+			#canvas {
+				border: 1px solid black;
+				cursor: none;
+			}
+			#context {
+				display: none;
+				position: absolute;
+				z-index: 100000;
+				border: 0.5px solid grey;
+				width: 100px;
+			}
+			#context > p {
+				margin-left: 15px;
+				cursor: pointer
+			}
+		</style>
+
+		<nav id="context">
+			<p class="1 c">1 column</p>
+			<p class="2 c">2 columns</p>
+			<p class="3 c">3 columns</p>
+			<p class="l m">left margin</p>
+			<p class="r m">right margin</p>
+			<p class="t m">top margin</p>
+			<p class="b m">bottom margin</p>
+		</nav>
+
+		<script type="text/javascript">
+			var mousePos = {};
+			mousePos.x = 0;
+			mousePos.y = 0;
+
+			// Get MouseMovement in the editor
+			document.getElementById("canvas").onmousemove = function(e) {
+				mousePos.x = e.clientX;
+				mousePos.y = e.clientY;
+			}
+
+			// Allow right click in editor
+			document.getElementById("canvas").oncontextmenu = function () {
+				showCustomMenu();
+				return false;
+			}
+
+			document.getElementById("canvas").onclick = function () {
+				if ($('#context').css("display") == "block") {
+					$('#context').css("display", "none")
+				}
+			}
+
+			$('#context').children("p").click(function() {
+				var str = $(this).attr("class");
+				if (str.slice(-1) == "c") {
+					columns = str.slice(0,1);
+					return true;
+				} else if (str.slice(-1) == "r") {
+					rows = str.slice(0,1);
+					return true;
+				} else if (str.slice(-1) == "m") {
+					if (str.slice(0,1) == "l") {
+						leftMargin = prompt("define left margin");
+					} else if (str.slice(0,1) == "r") {
+						rightMargin = prompt("define right margin");
+					} else if (str.slice(0,1) == "t") {
+						topMargin = prompt("define top margin");
+					} else if (str.slice(0,1) == "b") {
+						bottomMargin = prompt("define bottom margin");
+					}
+				} else {
+					return false;
+				}
+			})
+
+			function showCustomMenu() {
+				$('#context').css({
+					"top"		: mousePos.y > 755 ? mousePos.y - 100 : mousePos.y,
+					"left"		: mousePos.x > 505 ? mousePos.x - 100 : mousePos.x,
+					"display"	: "block"
+				});
+			}
+
+			//////////////////////////////
+			//                          //
+			//     Drawing functions    //
+			//                          //
+			//////////////////////////////
+
+			var canvas = document.getElementById("canvas");
+			var ctx;
+			var h = document.getElementById("canvas").height,
+				w = document.getElementById("canvas").width;
+			var columns			= 0,
+				rows			= 0,
+				leftMargin 		= 0,
+				rightMargin		= 0,
+				bottomMargin	= 0,
+				topMargin		= 0;
+			function draw() {
+
+				if (ctx == null) {
+					// Define canvas and context
+					ctx	= canvas.getContext("2d");
+				}
+				// Clear Each Frame
+				ctx.clearRect(10,10,605,855);
+
+				// Show Pointer
+				ctx.beginPath();
+				ctx.moveTo(10, mousePos.y);
+				ctx.lineTo(mousePos.x, mousePos.y);
+
+				ctx.moveTo(mousePos.x, 10);
+				ctx.lineTo(mousePos.x, mousePos.y);
+
+				ctx.lineWidth = 0.5;
+				ctx.strokeStyle = "grey";
+				ctx.stroke();
+
+				// Make horizontal ruler
+				ctx.beginPath();
+				ctx.rect(10,0,605,10);
+				for (var i = 0; i < 595; i = i + 5) {
+					ctx.moveTo(10 + i, 10);
+					ctx.lineTo(10 + i, 0);
+				}
+				ctx.lineWidth = 0.5;
+				ctx.stroke();
+
+				// Make verical ruler
+				ctx.beginPath();
+				ctx.rect(0,10,10,855)
+				for (var i = 0; i < 855; i = i + 5) {
+					ctx.moveTo(10, 10 + i);
+					ctx.lineTo(0, 10 + i);
+				}
+				ctx.lineWidth = 0.5;
+				ctx.stroke();
+				// Call the column painter
+				ctx.beginPath();
+				drawColumns();
+
+
+				// Call the margin painter
+				ctx.beginPath();
+				drawMargins();
+
+
+				window.requestAnimationFrame(draw);
+			}
+
+			function drawColumns() {
+				if (columns == 1) {
+					ctx.moveTo
+				}
+			}
+
+			function drawMargins() {
+
+			}
+
+			window.requestAnimationFrame(draw);
+		</script>
+	</body>
+</html>
